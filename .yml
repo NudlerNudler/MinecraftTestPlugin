@@ -1,0 +1,9 @@
+name: SpigotBlankPlugin
+main: com.meeku.tutorialPlugin.SpigotBlankPlugin
+version: 1.0
+api-version: 1.16
+commands:
+   kit:
+      description: goodkit
+      usage: /kitpvp
+      permission:
