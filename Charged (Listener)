@@ -1,0 +1,68 @@
+package com.meeku.tutorialPlugin;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Spider;
+import org.bukkit.entity.Zombie;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockGrowEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+public class Charged implements Listener {
+	@EventHandler
+	public void creatureSpawn(CreatureSpawnEvent event) {
+		if(event.getEntityType()== EntityType.CREEPER) {
+			Creeper creeper = (Creeper) event.getEntity();
+			creeper.setPowered(true);
+			creeper.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 1));
+		}
+		if(event.getEntityType()== EntityType.ZOMBIE) {
+			Zombie zombie = (Zombie) event.getEntity();
+			zombie.setBaby();
+		}
+		if(event.getEntityType()== EntityType.SPIDER) {
+			Spider spider = (Spider) event.getEntity();
+			spider.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 1));
+		}
+		if(event.getEntityType()== EntityType.SKELETON) {
+			Skeleton skeleton = (Skeleton) event.getEntity();
+			ItemStack knockbow = new ItemStack(Material.BOW);
+			knockbow.addEnchantment(Enchantment.ARROW_KNOCKBACK, 2);
+			skeleton.getEquipment().setItemInMainHand(knockbow);
+			skeleton.getEquipment().setItemInMainHandDropChance(0);
+		}
+	}
+	@EventHandler
+	public void ItemSpawn(BlockGrowEvent event) {
+		Block block = event.getBlock();
+		ItemStack hay = new ItemStack(Material.HAY_BLOCK);
+		if(block.getType() == Material.WHEAT) {
+			block.getWorld().dropItem(block.getLocation(), hay);
+		}
+	}
+	 @EventHandler
+	    public void craftItem(PrepareItemCraftEvent e) {
+	        Material itemType = e.getRecipe().getResult().getType();
+	        if(itemType==Material.WOODEN_PICKAXE||itemType==Material.WOODEN_SWORD||(itemType==Material.STONE_SWORD||(itemType==Material.IRON_SWORD||(itemType==Material.DIAMOND_SWORD)))) {
+	            e.getInventory().setResult(new ItemStack(Material.AIR));
+	            for(HumanEntity he:e.getViewers()) {
+	                if(he instanceof Player) {
+	                    ((Player)he).sendMessage(ChatColor.RED+"You cannot craft this!");
+	                }
+	            }
+	        }
+	    }
+
+}
